@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Contratos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        form {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .contract-container {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            text-align: justify;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .signature {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .signature-line {
+            margin-top: 30px;
+            border-top: 1px solid black;
+            width: 200px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Gerador de Contrato</h1>
+
+    <form id="contractForm">
+        <input type="text" id="nome" placeholder="Nome do Contratante" required>
+        <input type="text" id="cpf" placeholder="CPF/CNPJ do Contratante" required>
+        <input type="text" id="endereco" placeholder="Endereço do Contratante" required>
+        <input type="text" id="objeto" placeholder="Objeto do Contrato" required>
+        <input type="text" id="valor" placeholder="Valor do Contrato (R$)" required>
+        <input type="text" id="pagamento" placeholder="Forma de Pagamento" required>
+        <input type="text" id="prazo" placeholder="Prazo de Execução" required>
+        <input type="text" id="cidade" placeholder="Cidade da Assinatura" required>
+        <input type="date" id="data" placeholder="Data da Assinatura" required>
+        <button type="submit">Gerar Contrato</button>
+    </form>
+
+    <div id="contractViewer" class="contract-container">
+        <div id="pdfContent">
+            <h1>Contrato de Prestação de Serviços</h1>
+            <p id="contractText"></p>
+
+            <div class="signature">
+                <div>
+                    <div class="signature-line"></div>
+                    <p>Contratante</p>
+                </div>
+                <div>
+                    <div class="signature-line"></div>
+                    <p>Contratado</p>
+                </div>
+            </div>
+        </div>
+        <button id="downloadPdf">Baixar em PDF</button>
+        <button onclick="location.reload()">Voltar</button>
+    </div>
+
+    <script>
+        const form = document.getElementById('contractForm');
+        const viewer = document.getElementById('contractViewer');
+        const contractText = document.getElementById('contractText');
+        const downloadPdfBtn = document.getElementById('downloadPdf');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nome = document.getElementById('nome').value;
+            const cpf = document.getElementById('cpf').value;
+            const endereco = document.getElementById('endereco').value;
+            const objeto = document.getElementById('objeto').value;
+            const valor = document.getElementById('valor').value;
+            const pagamento = document.getElementById('pagamento').value;
+            const prazo = document.getElementById('prazo').value;
+            const cidade = document.getElementById('cidade').value;
+            const data = document.getElementById('data').value;
+
+            const contrato = `Pelo presente instrumento particular de contrato de prestação de serviços, de um lado:
+            
+${nome}, inscrito no CPF/CNPJ sob o nº ${cpf}, residente e domiciliado em ${endereco}.
+
+O presente contrato tem como objeto: ${objeto}.
+
+Valor acordado: R$ ${valor}, pago da seguinte forma: ${pagamento}.
+
+Prazo de execução: ${prazo}.
+
+Firmado na cidade de ${cidade}, na data de ${data}.`;
+
+            contractText.textContent = contrato;
+            form.style.display = 'none';
+            viewer.style.display = 'block';
+        });
+
+        downloadPdfBtn.addEventListener('click', function() {
+            const element = document.getElementById('pdfContent');
+            html2pdf().from(element).save('Contrato.pdf');
+        });
+    </script>
+
+</body>
+</html>
